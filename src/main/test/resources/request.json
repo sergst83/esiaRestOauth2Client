@@ -1,0 +1,58 @@
+{
+  "firstName":"Тест2",
+  "lastName":"Тест2",
+  "middleName":"Тест2",
+  "birthDate":"11.11.1988",
+  "gender":"M",
+  "trusted":"true",
+  "snils":"736-721-205 95",
+  "contacts": {
+    "elements": [
+      {
+        "type": "MBT",
+        "value": "+7(919)1880693"
+      },
+      {
+        "type": "EML",
+        "value": "sergst_test@bk.ru"
+      }
+    ]
+  },
+  "documents": {
+    "elements": [
+      {
+        "type":"RF_PASSPORT",
+        "series":"2003",
+        "number":"809929",
+        "issueId":"111111",
+        "issuedBy":"Выдан",
+        "issueDate":"01.05.2016"
+      }
+    ]
+  },
+  "addresses":{
+    "elements": [
+      {
+        "type":"PLV",
+        "address":{
+          "countryId":"RUS",
+          "zipCode":"394000",
+          "region":"Кемеровская Область",
+          "area":"Таштагольский Район",
+          "city":"Шерегеш Поселок городского типа",
+          "district":"",
+          "settlement":"Усть-Анзас Поселок",
+          "street":"Советская Улица",
+          "additionArea":"Регион Садовое неком-е товарищество",
+          "additionAreaStreet":"",
+          "house":"86/1",
+          "building":"e",
+          "frame":"204у",
+          "flat":"пом.419",
+          "kladrCode":"77000000000",
+          "fiasCode":"77-0-000-000-000-000-4236-0000-000"
+        }
+      }
+    ]
+  }
+}
