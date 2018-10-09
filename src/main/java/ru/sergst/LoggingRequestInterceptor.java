@@ -10,6 +10,7 @@ import org.springframework.http.client.ClientHttpResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author sergey.stanislavsky
@@ -17,7 +18,7 @@ import java.io.InputStreamReader;
  */
 public class LoggingRequestInterceptor implements ClientHttpRequestInterceptor {
 
-    final static Logger logger = LoggerFactory.getLogger(LoggingRequestInterceptor.class);
+    private final static Logger logger = LoggerFactory.getLogger(LoggingRequestInterceptor.class);
 
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
@@ -28,34 +29,36 @@ public class LoggingRequestInterceptor implements ClientHttpRequestInterceptor {
         return response;
     }
 
-    private void traceRequest(HttpRequest request, byte[] body) throws IOException {
-        logger.debug("===========================request begin================================================");
-
-        logger.debug("URI : " + request.getURI());
-        logger.debug("Method : " + request.getMethod());
-        logger.debug("Headers : " + request.getHeaders().toString());
-        logger.debug("Request Body : " + new String(body, "UTF-8"));
-        logger.debug("==========================request end================================================");
+    private void traceRequest(HttpRequest request, byte[] body) {
+        String string = "\n" +
+                "===========================request begin================================================" + "\n" +
+                "URI : " + request.getURI() + "\n" +
+                "Method : " + request.getMethod() + "\n" +
+                "Headers : " + request.getHeaders().toString() + "\n" +
+                "Request Body : " + new String(body, StandardCharsets.UTF_8) + "\n" +
+                "==========================request end================================================" + "\n";
+        logger.debug(string);
     }
 
     private void traceResponse(ClientHttpResponse response) throws IOException {
         StringBuilder inputStringBuilder = new StringBuilder();
         try {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getBody(), "UTF-8"));
-            String line = bufferedReader.readLine();
-            while (line != null) {
-                inputStringBuilder.append(line);
-                inputStringBuilder.append('\n');
-                line = bufferedReader.readLine();
-            }
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getBody(), StandardCharsets.UTF_8));
+            bufferedReader.lines().forEachOrdered(inputStringBuilder::append);
         } catch (IOException e) {
-            inputStringBuilder.append("");
+            if (e.getMessage().contains("Server returned HTTP response code")) {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getBody(), StandardCharsets.UTF_8));
+                bufferedReader.lines().forEachOrdered(inputStringBuilder::append);
+            }
         }
-        logger.debug("============================response begin==========================================");
-        logger.debug("status code: " + response.getStatusCode());
-        logger.debug("status text: " + response.getStatusText());
-        logger.debug("Response Body : {" + inputStringBuilder.toString() + "}");
-        logger.debug("=======================response end=================================================");
+
+        String string = "\n" +
+        "============================response begin==========================================" + "\n" +
+        "status code: " + response.getStatusCode() + "\n" +
+        "status text: " + response.getStatusText() + "\n" +
+        "Response Body : [" + inputStringBuilder.toString() + "]" + "\n" +
+        "=======================response end=================================================" + "\n";
+        logger.debug(string);
     }
 
 }
