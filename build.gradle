@@ -38,7 +38,7 @@ dependencies {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'ru.rtlabs.Application'
+        attributes 'Main-Class': 'ru.sergst.Application'
     }
     //dependsOn copyToLib
 }
